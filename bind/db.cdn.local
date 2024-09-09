@@ -1,0 +1,18 @@
+$TTL    86400
+@       IN      SOA     ns1.cdn.local. admin.cdn.local. (
+                        2024090901  ; Serial
+                        3600        ; Refresh
+                        1800        ; Retry
+                        1209600     ; Expire
+                        86400 )     ; Minimum TTL
+
+        IN      NS      ns1.cdn.local.
+
+ns1     IN      A       127.0.0.1
+
+load-balancer-1   IN   A   127.0.0.1
+load-balancer-2   IN   A   127.0.0.1
+node1             IN   A   127.0.0.1
+node2             IN   A   127.0.0.1
+node3             IN   A   127.0.0.1
+node4             IN   A   127.0.0.1

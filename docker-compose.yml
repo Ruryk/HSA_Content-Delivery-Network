@@ -1,14 +1,20 @@
 version: '3'
 services:
-  coredns:
-    image: coredns/coredns:latest
-    container_name: coredns
+  bind-server:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: bind-server
     ports:
-      - "53:53/udp"  # DNS port 53 for UDP requests
+      - "53:53/tcp"
+      - "53:53/udp"
     volumes:
-      - ./Corefile:/etc/coredns/Corefile  # Configuration file for CoreDNS
+      - ./bind/named.conf:/etc/bind/named.conf
+      - ./bind/db.cdn.local:/etc/bind/db.cdn.local
+      - ./bind/db.127:/etc/bind/db.127
+    environment:
+      - BIND9_LOG_LEVEL=info
     networks:
       - cdn-network
+    entrypoint: ["/usr/sbin/named", "-f", "-c", "/etc/bind/named.conf"]
 
   load-balancer-1:
     image: nginx:latest
@@ -18,7 +24,7 @@ services:
     volumes:
       - ./nginx-lb1.conf:/etc/nginx/nginx.conf  # Configuration for Round Robin load balancing
     depends_on:
-      - coredns
+      - bind-server
       - node1
       - node2
     networks:
@@ -32,7 +38,7 @@ services:
     volumes:
       - ./nginx-lb2.conf:/etc/nginx/nginx.conf  # Configuration for Weighted Round Robin load balancing
     depends_on:
-      - coredns
+      - bind-server
       - node3
       - node4
     networks:
