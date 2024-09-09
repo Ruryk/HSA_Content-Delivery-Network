@@ -8,7 +8,7 @@ services:
       - "53:53/udp"
     volumes:
       - ./bind/named.conf:/etc/bind/named.conf
-      - ./bind/db.cdn.local:/etc/bind/db.cdn.local
+      - ./bind/db.cdn.test:/etc/bind/db.cdn.test
       - ./bind/db.127:/etc/bind/db.127
     environment:
       - BIND9_LOG_LEVEL=info
